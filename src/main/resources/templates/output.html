@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+	<h1>Result</h1>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>sex</th>
+            <th>class</th>
+            <th>phone_number</th>
+            <th>birth</th>
+            <th>note</th>
+        </tr>
+        <tr th:each="student: ${newStudentList}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.sex}"></td>
+            <td th:text="${student.course}"></td>
+            <td th:text="${student.phone_number}"></td>
+            <td th:text="${student.birth}"></td>
+            <td th:text="${student.note}"></td>
+        </tr>
+    </table>
+    <a href="/user">Submit another query</a>
+</body>
+</html>

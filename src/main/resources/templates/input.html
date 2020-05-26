@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Table</h1>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>sex</th>
+            <th>class</th>
+            <th>phone_number</th>
+            <th>birth</th>
+            <th>note</th>
+        </tr>
+        <tr th:each="student: ${oldStudentList}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.sex}"></td>
+            <td th:text="${student.course}"></td>
+            <td th:text="${student.phone_number}"></td>
+            <td th:text="${student.birth}"></td>
+            <td th:text="${student.note}"></td>
+        </tr>
+    </table>
+    <form action="#" th:action="@{/user}" th:object="${SQL}" method="post">
+        <p>Update: <input type="text" th:field="*{update}" size="150" /></p>
+    	<p>Select: <input type="text" th:field="*{select}" size="150" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+</body>
+</html>
