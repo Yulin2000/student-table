@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping
     public String userGet(Model model) {
         model.addAttribute("SQL", new SQL());
-        List<Student> oldStudentList = userRepository.select("select * from student;");
+        List<Student> oldStudentList = userRepository.select("select * from students;");
         model.addAttribute("oldStudentList", oldStudentList);
 		return "input";
     }
