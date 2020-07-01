@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .mybutton {
+            background-color: #c9cec7;
+            border: none;
+            color: rgb(15, 15, 15);
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+             font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Query student information</h1>
+    <form action="#" th:action="@{/select/result}" method="post">
+        <label for="sex">Choose gender:</label>
+        <select name="sex" id="sex">
+            <option value="male">Male</option>
+            <option value="fmale">Fmale</option>
+        </select>
+        <br><br>
+        <lable for="name">Student name:</lable>
+        <input type="text" name="name" id="name" />
+        <br><br>
+        <input type="submit" value="Search" class="mybutton"/>
+    </form>
+</body>

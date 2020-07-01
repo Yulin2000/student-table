@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script th:inline="javascript" src="index.js"></script>
+</head>
+<body>
+    <header>学生信息系统</header>
+
+    <!----------------------------------------------Search Model-------------------------------------------------->
+
+    <form action="#" th:action="@{/home}" method="post">
+        <div class="search-block">
+            <div class="box1">
+                <label for="sex">选择性别:</label>
+                <select id="sex" name="sex_search">
+                    <option value="male">男</option>
+                    <option value="fmale">女</option>
+                </select>
+            </div>
+    
+            <div class="box2">
+                <label for="name">姓名:</label>
+                <input type="text" id="name" name="name_search" placeholder="请输入姓名"/>
+            </div>
+    
+            <div class="box3">
+                <label for="phone">电话:</label>
+                <input type="tel" id="phone" name="phone_search" placeholder="请输入十位电话号码" />
+            </div>
+    
+            <div class="box4">
+                <label for="birth">生日:</label>
+                <input type="date" id="birth" name="birth_search" />
+            </div>
+        </div>   
+        <button type="submit" id="searchPosition" class="mybutton" name="button" value="Search">查询</button>
+        <button type="reset" id="resetPosition" class="mybutton">重置</button>
+        <div th:if="${search_result == true}">
+            <a href="/home"><button type="button" id="backPosition" class="mybutton">返回</button></a>
+        </div>
+    </form>
+
+    <!-------------------------------------------Display & Delete Model------------------------------------------------>
+
+    <form action="#" th:action="@{/delete}" method="post">
+        <table style="width: 100%" id="alternatecolor">
+            <tr>
+                <th style="width: 5%">选择</th>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>班级</th>
+                <th>电话</th>
+                <th>生日</th>
+                <th>备注</th>
+            </tr>
+            <tr th:each="student, iter: ${oldStudentList}" th:id="'No.' + ${iter.index}" style="display: none">
+                <img src onerror="accumulate()" style="display: none" />
+                <td><input type="checkbox" name="checked_ones" th:value="${student.id}" th:onclick="if(this.checked){add(this.value)}else{remove(this.value)}" /></td>
+                <td><label th:text="${student.id}"></label></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.sex}"></td>
+                <td th:text="${student.course}"></td>
+                <td th:text="${student.phone_number}"></td>
+                <td th:text="${student.birth}"></td>
+                <td th:text="${student.note}"></td>
+            </tr>
+        </table>
+        <img src onerror="firstPage()" style="display: none" />
+        <br>
+        <span>共<span id="data-number"></span>条 &nbsp;&nbsp;</span>
+        <span id="page-divider"></span>
+        <span>&nbsp;&nbsp;</span>
+        <span style="border: groove">10条/页</span>
+        <br><br>
+        <button type="button" id="prev" onclick="prevPage()">上一页</button>
+        <button type="button" id="next" onclick="nextPage()">下一页</button>
+        <button type="submit" id="deletePosition" class="mybutton" style="display: none">删除</button>
+    </form>
+    <button type="button" id="deleteNoticePosition" class="mybutton" onclick="openNotice()">删除</button>
+
+    <!--------------------------------------------Page Search Model------------------------------------------------>
+
+    <br>
+    <form action="#" th:action="@{/home}" method="post" style="display: none">
+        <label for="page">页码:</label>
+        <input type="text" id="page" name="page" />
+        <button type="submit" name="button" value="page_search">跳转</button>
+    </form>
+    
+    <!----------------------------------------------Create Popup Model---------------------------------------------->
+
+    <div id="createPosition">
+        <button type="button" class="mybutton" onclick="openCreate()">新增</button>
+    </div>
+    <div class="create-popup" id="createForm">
+        <h1>新增学生</h1>
+        <form action="#" th:action="@{/home}" th:object="${newStudent}" method="post">
+            <p>姓名： <input type="text" th:field="*{name}" size="50" /></p>
+            <p>性别： <input type="text" th:field="*{sex}" size="50" /></p>
+            <p>班级： <input type="text" th:field="*{course}" size="50" /></p>
+            <p>电话： <input type="text" th:field="*{phone_number}" size="50" /></p>
+            <p>生日： <input type="text" th:field="*{birth}" size="50" /></p>
+            <p>备注： <input type="text" th:field="*{note}" size="50" /></p>
+            <button type="submit" name="button" value="Create" class="saveButton">创建</button>
+            <button type="reset" value="Reset" class="resetButton">重置</button>
+            <button type="button" onclick="closeCreate()" class="cancelButton">取消</button>
+        </form>
+    </div>
+
+    <!--------------------------------------------Modify Popup Model------------------------------------------------>
+
+    <div id="modifyPosition">
+        <button type="button" class="mybutton" onclick="openModify()">更改</button>
+    </div>
+    <div class="modify-popup" id="modifyForm">
+        <h1>在下表更改学生信息:</h1>
+        <form action="#" th:action="@{/home}" method="post">
+            <table id="alternatecolor">
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                    <th>电话</th>
+                    <th>生日</th>
+                    <th>备注</th>
+                </tr>
+                <tr th:each="student: ${oldStudentList}" th:id="${student.id}" style="display: none">
+                    <td th:text="${student.id}"></td>
+                    <td><input type="text" name="name" th:value="${student.name}" size="10" /></td>
+                    <td><input type="text" name="sex" th:value="${student.sex}" size="2" /></td>
+                    <td><input type="text" name="course" th:value="${student.course}" size="5" /></td>
+                    <td><input type="text" name="phone_number" th:value="${student.phone_number}" size="20" /></td>
+                    <td><input type="text" name="birth" th:value="${student.birth}" size="10" /></td>
+                    <td><input type="text" name="note" th:value="${student.note}" size="10" /></td>
+                    <input type="hidden" name="id" th:value="${student.id}"/>
+                </tr>
+            </table>
+            <button type="submit" name="button" value="Modify" class="saveButton">保存</button>
+            <button type="button" onclick="closeModify()" class="cancelButton">取消</button>
+        </form>
+    </div>
+    <div class="modify-popup" id="modifyNotice">
+        <h1 style="color: red">未选择学生数据，请先选择记录！</h1>
+        <button type="button" onclick="closeModifyNotice()" class="cancelButton">关闭</button>
+    </div>
+
+    <!-------------------------------------------------------------------------------------------------------------->
+
+</body>
+</html>

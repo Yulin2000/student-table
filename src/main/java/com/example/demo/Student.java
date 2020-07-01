@@ -10,8 +10,15 @@ public class Student {
     private String sex;
     private int course;
     private String phone_number;
-    private Date birth;
+    private String birth;
     private String note;
+
+    
+    public Student() {
+        this.id = 0;
+    }
+    
+
 
     //set id
     public Student setId(int id) {
@@ -70,12 +77,13 @@ public class Student {
 
     //set birth 
     public Student setBirth(Date birth) {
-        this.birth = birth;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+        this.birth = dateFormat.format(birth);
         return this;
     }
 
     //get birth
-    public Date getBirth() {
+    public String getBirth() {
         return this.birth;
     }
 
@@ -93,14 +101,13 @@ public class Student {
     //get student info
     public String getAll() {
         String result = "";
-        result = result + " " + Integer.toString(this.id);
-        result = result + " " + this.name;
-        result = result + " " + this.sex;
-        result = result + " " + Integer.toString(this.course);
-        result = result + " " + this.phone_number;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");  
-        result = result + " " + dateFormat.format(this.birth);
-        result = result + " " + this.note;
+        result = result + "'" + this.name + "'";
+        result = result + ", '" + this.sex + "'";
+        result = result + ", " + Integer.toString(this.course);
+        result = result + ", '" + this.phone_number + "'"; 
+        result = result + ", '" + this.birth + "'";
+        result = result + ", '" + this.note + "'";
         return result;
     }
+
 }

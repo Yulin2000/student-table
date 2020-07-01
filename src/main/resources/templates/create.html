@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .mybutton {
+            background-color: #c9cec7;
+            border: none;
+            color: rgb(15, 15, 15);
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+             font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>New Student</h1>
+    <form action="#" th:action="@{/create/result}" th:object="${newStudent}" method="post">
+        <p>name <input type="text" th:field="*{name}" size="50" /></p>
+        <p>sex: <input type="text" th:field="*{sex}" size="50" /></p>
+        <p>class: <input type="text" th:field="*{course}" size="50" /></p>
+        <p>phone number: <input type="text" th:field="*{phone_number}" size="50" /></p>
+        <p>birth: <input type="text" th:field="*{birth}" size="50" /></p>
+        <p>note: <input type="text" th:field="*{note}" size="50" /></p>
+        <p><input type="submit" value="Create" class="mybutton" /> <input type="reset" value="Reset" class="mybutton" /></p>
+    </form>
+</body>
+</html>

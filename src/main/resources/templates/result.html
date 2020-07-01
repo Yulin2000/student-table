@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>MySQL Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        table, td {   
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th {
+            background-color: rgb(223, 221, 221);
+            padding-top: 1em;
+            padding-bottom: 1em;
+            text-align: center;
+        }
+
+        .oddrowcolor{
+            background-color:#f4f6f7;
+        }
+
+        .evenrowcolor{
+            background-color:#d8dddd;
+        }  
+
+        .mybutton {
+            background-color: #3a7c62;
+            border: none;
+            color: rgb(15, 15, 15);
+            font-weight: bold;
+            padding: 5px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function altRows(id) {
+            if(document.getElementsByTagName){ 
+         
+                var table = document.getElementById(id); 
+                var rows = table.getElementsByTagName("tr");
+          
+                for(i = 0; i < rows.length; i++) {         
+                    if(i % 2 == 0){
+                        rows[i].className = "evenrowcolor";
+                    }else {
+                        rows[i].className = "oddrowcolor";
+                    }     
+                }
+            }
+        }
+
+        window.onload=function() {
+            altRows('alternatecolor');
+        }
+    </script>
+</head>
+<body>
+    <h1>查询结果</h1>
+    <table style="width: 100%" id="alternatecolor">
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>班级</th>
+            <th>电话</th>
+            <th>生日</th>
+            <th>备注</th>
+        </tr>
+        <tr th:each="student: ${newStudentList}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.sex}"></td>
+            <td th:text="${student.course}"></td>
+            <td th:text="${student.phone_number}"></td>
+            <td th:text="${student.birth}"></td>
+            <td th:text="${student.note}"></td>
+        </tr>
+    </table>
+    <a href="/home"><button type="button" class="mybutton">返回</button></a>
+</body>
+</html>
