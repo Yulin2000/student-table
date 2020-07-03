@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>MySQL Database</title>
+    <title>学生信息管理系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="mystyle.css">
     <script th:inline="javascript" src="index.js"></script>
@@ -97,7 +97,7 @@
         <button type="button" class="mybutton" onclick="openCreate()">新增</button>
     </div>
     <div class="create-popup" id="createForm">
-        <h1>新增学生</h1>
+        <h1>新建学生档案</h1>
         <form action="#" th:action="@{/home}" th:object="${newStudent}" method="post">
             <p>姓名： <input type="text" th:field="*{name}" size="50" /></p>
             <p>性别： <input type="text" th:field="*{sex}" size="50" /></p>
@@ -107,11 +107,11 @@
             <p>备注： <input type="text" th:field="*{note}" size="50" /></p>
             <button type="submit" name="button" value="Create" class="saveButton">创建</button>
             <button type="reset" value="Reset" class="resetButton">重置</button>
-            <button type="button" onclick="closeCreate()" class="cancelButton">取消</button>
+            <button type="button" onclick="window.close()" class="cancelButton">取消</button>
         </form>
     </div>
 
-    <!--------------------------------------------Modify Popup Model------------------------------------------------>
+    <!---------------------------------Modify Popup Model (inside child window)-------------------------------------->
 
     <div id="modifyPosition">
         <button type="button" class="mybutton" onclick="openModify()">更改</button>
@@ -141,15 +141,37 @@
                 </tr>
             </table>
             <button type="submit" name="button" value="Modify" class="saveButton">保存</button>
-            <button type="button" onclick="closeModify()" class="cancelButton">取消</button>
+            <button type="button" onclick="window.close()" class="cancelButton">取消</button>
         </form>
     </div>
-    <div class="modify-popup" id="modifyNotice">
+    <div class="modify-popup" id="emptyCheckboxNotice">
         <h1 style="color: red">未选择学生数据，请先选择记录！</h1>
-        <button type="button" onclick="closeModifyNotice()" class="cancelButton">关闭</button>
+        <button type="button" onclick="window.close()" class="cancelButton">关闭</button>
     </div>
 
-    <!-------------------------------------------------------------------------------------------------------------->
+    <!-------------------------------create & modify popup form submit trigger----------------------------------->
+
+    <div th:if="${modifySubmitted == true}">
+        <img src onerror="closeAndReload_M()" style="display: none" />
+        <script>
+            function closeAndReload_M() {
+                window.close();
+                window.opener.location.reload();
+            }
+        </script>
+    </div>
+
+    <div th:if="${createSubmitted == true}">
+        <img src onerror="closeAndReload_C()" style="display: none" />
+        <script>
+            function closeAndReload_C() {
+                window.close();
+                window.opener.location.reload();
+            }
+        </script>
+    </div>
+
+    <!---------------------------------------------------------------------------------------------------------->
 
 </body>
 </html>

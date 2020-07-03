@@ -63,6 +63,7 @@ public class UserController {
             String insert_sql = "insert into students(name,sex,class,phone_number,birth,note) values(";
             insert_sql = insert_sql + newOne.getAll() + ");";
             userRepository.update(insert_sql);
+            model.addAttribute("createSubmitted", true); //tell home this is child page
         }
 
         //case2: submit modify form
@@ -79,6 +80,7 @@ public class UserController {
                 update_sql = update_sql + " where id = " + Integer.toString(id[i]) + ";";
                 userRepository.update(update_sql);
             }
+            model.addAttribute("modifySubmitted", true); //tell home this is child page
         }
 
         //case3: submit delete form

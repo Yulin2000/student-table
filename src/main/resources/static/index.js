@@ -1,38 +1,38 @@
+//----------------------------------popup controller--------------------------------
+
 //pop up create form
 function openCreate() {
-    document.getElementById("createForm").style.display = "block";
-}
-
-//close create form
-function closeCreate() {
-    document.getElementById("createForm").style.display = "none";
+    var popup = window.open("","name", "width=600,height=400,top=200,left=400");
+    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
+    popup.document.write(document.getElementById("createForm").innerHTML);
 }
 
 //pop up modify form
 function openModify() {
+    var popup = window.open("","name", "width=800,height=400,top=300,left=300");
+    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
     if(HAVE_CHECKED === 0) {
-        document.getElementById("modifyNotice").style.display = "block";
+        popup.document.write(document.getElementById("emptyCheckboxNotice").innerHTML);
     }
     else {
-        document.getElementById("modifyForm").style.display = "block";
+        popup.document.write(document.getElementById("modifyForm").innerHTML);
     }
 }
 
-//pop up delete/modify notice page (no checked data)
+//pop up delete/modify notice page (warning: no checked data)
 function openNotice() {
-    document.getElementById("modifyNotice").style.display = "block";
+    var popup = window.open("","name", "width=600,height=400,top=200,left=400");
+    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
+    popup.document.write(document.getElementById("emptyCheckboxNotice").innerHTML);
 }
 
-//close modify form
-function closeModify() {
-    document.getElementById("modifyForm").style.display = "none";
-}
 
 //------------------------------------checkbox and popup--------------------------------------
 
+
 var HAVE_CHECKED = 0;
 
-//add an id into array
+//check a row of data
 function add(id) {
     document.getElementById(id).style.display = "";
     HAVE_CHECKED = HAVE_CHECKED + 1;
@@ -40,7 +40,7 @@ function add(id) {
     document.getElementById("deleteNoticePosition").style.display = "none";
 }
 
-//remove an id from array
+//uncheck a row of data
 function remove(id) {
     document.getElementById(id).style.display = "none";
     HAVE_CHECKED = HAVE_CHECKED - 1;
@@ -50,10 +50,6 @@ function remove(id) {
     }
 }
 
-//close no checked notice page
-function closeModifyNotice() {
-    document.getElementById("modifyNotice").style.display = "none";
-}
 
 //-------------------------------------Display by page-----------------------------------------
 
@@ -199,5 +195,9 @@ function altRows(id){
 window.onload = function() {
     altRows('alternatecolor');
 }
+
+//----------------------------------------------------------------------------------------
+
+
 
 

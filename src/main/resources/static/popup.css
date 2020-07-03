@@ -1,0 +1,42 @@
+
+/* buttons */
+
+.saveButton {
+    background-color: #55f87d;
+    border: none;
+    color: rgb(15, 15, 15);
+    font-weight: bold;
+    padding: 3px 9px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.resetButton {
+    background-color: #6dbcfd;
+    border: none;
+    color: rgb(15, 15, 15);
+    font-weight: bold;
+    padding: 3px 9px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.cancelButton {
+    background-color: #f87846;
+    border: none;
+    color: rgb(15, 15, 15);
+    font-weight: bold;
+    padding: 3px 9px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* body */
+
+body {
+    background-color: rgb(223, 226, 226);
+}
+
+img { 
+    display: none;  
+}
