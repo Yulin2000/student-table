@@ -3,175 +3,279 @@
 <head>
     <title>学生信息管理系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--layui import-->
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
+
     <link rel="stylesheet" type="text/css" href="mystyle.css">
     <script th:inline="javascript" src="index.js"></script>
 </head>
-<body>
-    <header>学生信息系统</header>
+<body class="layui-layout-body">
 
-    <!----------------------------------------------Search Model-------------------------------------------------->
+    <div class="layui-layout layui-layout-admin">
 
-    <form action="#" th:action="@{/home}" method="post">
-        <div class="search-block">
-            <div class="box1">
-                <label for="sex">选择性别:</label>
-                <select id="sex" name="sex_search">
-                    <option value="male">男</option>
-                    <option value="fmale">女</option>
-                </select>
-            </div>
-    
-            <div class="box2">
-                <label for="name">姓名:</label>
-                <input type="text" id="name" name="name_search" placeholder="请输入姓名"/>
-            </div>
-    
-            <div class="box3">
-                <label for="phone">电话:</label>
-                <input type="tel" id="phone" name="phone_search" placeholder="请输入十位电话号码" />
-            </div>
-    
-            <div class="box4">
-                <label for="birth">生日:</label>
-                <input type="date" id="birth" name="birth_search" />
-            </div>
-        </div>   
-        <button type="submit" id="searchPosition" class="mybutton" name="button" value="Search">查询</button>
-        <button type="reset" id="resetPosition" class="mybutton">重置</button>
-        <div th:if="${search_result == true}">
-            <a href="/home"><button type="button" id="backPosition" class="mybutton">返回</button></a>
+        <div class="layui-header layui-bg-black">
+            <div class="layui-logo">学生信息系统</div>
         </div>
-    </form>
-
-    <!-------------------------------------------Display & Delete Model------------------------------------------------>
-
-    <form action="#" th:action="@{/delete}" method="post">
-        <table style="width: 100%" id="alternatecolor">
-            <tr>
-                <th style="width: 5%">选择</th>
-                <th>学号</th>
-                <th>姓名</th>
-                <th>性别</th>
-                <th>班级</th>
-                <th>电话</th>
-                <th>生日</th>
-                <th>备注</th>
-            </tr>
-            <tr th:each="student, iter: ${oldStudentList}" th:id="'No.' + ${iter.index}" style="display: none">
-                <img src onerror="accumulate()" style="display: none" />
-                <td><input type="checkbox" name="checked_ones" th:value="${student.id}" th:onclick="if(this.checked){add(this.value)}else{remove(this.value)}" /></td>
-                <td><label th:text="${student.id}"></label></td>
-                <td th:text="${student.name}"></td>
-                <td th:text="${student.sex}"></td>
-                <td th:text="${student.course}"></td>
-                <td th:text="${student.phone_number}"></td>
-                <td th:text="${student.birth}"></td>
-                <td th:text="${student.note}"></td>
-            </tr>
-        </table>
-        <img src onerror="firstPage()" style="display: none" />
-        <br>
-        <span>共<span id="data-number"></span>条 &nbsp;&nbsp;</span>
-        <span id="page-divider"></span>
-        <span>&nbsp;&nbsp;</span>
-        <span style="border: groove">10条/页</span>
-        <br><br>
-        <button type="button" id="prev" onclick="prevPage()">上一页</button>
-        <button type="button" id="next" onclick="nextPage()">下一页</button>
-        <button type="submit" id="deletePosition" class="mybutton" style="display: none">删除</button>
-    </form>
-    <button type="button" id="deleteNoticePosition" class="mybutton" onclick="openNotice()">删除</button>
-
-    <!--------------------------------------------Page Search Model------------------------------------------------>
-
-    <br>
-    <form action="#" th:action="@{/home}" method="post" style="display: none">
-        <label for="page">页码:</label>
-        <input type="text" id="page" name="page" />
-        <button type="submit" name="button" value="page_search">跳转</button>
-    </form>
     
-    <!----------------------------------------------Create Popup Model---------------------------------------------->
+        <!----------------------------------------------Search Model-------------------------------------------------->
 
-    <div id="createPosition">
-        <button type="button" class="mybutton" onclick="openCreate()">新增</button>
-    </div>
-    <div class="create-popup" id="createForm">
-        <h1>新建学生档案</h1>
-        <form action="#" th:action="@{/home}" th:object="${newStudent}" method="post">
-            <p>姓名： <input type="text" th:field="*{name}" size="50" /></p>
-            <p>性别： <input type="text" th:field="*{sex}" size="50" /></p>
-            <p>班级： <input type="text" th:field="*{course}" size="50" /></p>
-            <p>电话： <input type="text" th:field="*{phone_number}" size="50" /></p>
-            <p>生日： <input type="text" th:field="*{birth}" size="50" /></p>
-            <p>备注： <input type="text" th:field="*{note}" size="50" /></p>
-            <button type="submit" name="button" value="Create" class="saveButton">创建</button>
-            <button type="reset" value="Reset" class="resetButton">重置</button>
-            <button type="button" onclick="window.close()" class="cancelButton">取消</button>
-        </form>
-    </div>
+        <br>
+    
+        <div class="layui-row">
+            <form class="layui-form layui-col-md9" id="search_form" action="#" th:action="@{/home}" method="post">
+                <div class="layui-form-item">
 
-    <!---------------------------------Modify Popup Model (inside child window)-------------------------------------->
+                    <div class="layui-inline">
+                        <label class="layui-form-label">选择性别</label>
+                        <div class="layui-input-inline">
+                            <select class="layui-input" id="sex" name="sex_search">
+                                <option value="male">男</option>
+                                <option value="fmale">女</option>
+                            </select>
+                        </div>
+                    </div>
+            
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="text" id="name" name="name_search" placeholder="请输入姓名"/>
+                        </div>
+                    </div>
+            
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="tel" id="phone" name="phone_search" placeholder="请输入十位电话号码" />
+                        </div>
+                    </div>
+            
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" type="text" id="birth" name="birth_search" placeholder="请选择出生日期" />
+                        </div>
+                    </div>
 
-    <div id="modifyPosition">
-        <button type="button" class="mybutton" onclick="openModify()">更改</button>
-    </div>
-    <div class="modify-popup" id="modifyForm">
-        <h1>在下表更改学生信息:</h1>
-        <form action="#" th:action="@{/home}" method="post">
-            <table id="alternatecolor">
-                <tr>
-                    <th>学号</th>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>班级</th>
-                    <th>电话</th>
-                    <th>生日</th>
-                    <th>备注</th>
-                </tr>
-                <tr th:each="student: ${oldStudentList}" th:id="${student.id}" style="display: none">
-                    <td th:text="${student.id}"></td>
-                    <td><input type="text" name="name" th:value="${student.name}" size="10" /></td>
-                    <td><input type="text" name="sex" th:value="${student.sex}" size="2" /></td>
-                    <td><input type="text" name="course" th:value="${student.course}" size="5" /></td>
-                    <td><input type="text" name="phone_number" th:value="${student.phone_number}" size="20" /></td>
-                    <td><input type="text" name="birth" th:value="${student.birth}" size="10" /></td>
-                    <td><input type="text" name="note" th:value="${student.note}" size="10" /></td>
-                    <input type="hidden" name="id" th:value="${student.id}"/>
-                </tr>
+                </div>
+            </form>
+
+            <div class="layui-btn-group layui-col-md3" style="text-align: right">
+                <button type="button" id="search_back_button" class="layui-btn" style="display: none" onclick="location.href='/home';">返回</button>
+                <button form="search_form" type="submit" class="layui-btn" name="button" value="Search">查询</button>
+                <button form="search_form" type="reset" class="layui-btn">重置</button>
+                <div th:if="${search_result == true}">
+                    <script>
+                        document.getElementById('search_back_button').style.display = "";
+                    </script>
+                </div>
+            </div>
+
+        </div>
+    
+        <!-------------------------------------------Display & Delete Model------------------------------------------------>
+    
+        <form class="layui-form" action="#" th:action="@{/delete}" method="post">
+            <table lay-filter="home_table">
+                <thead>
+                    <tr>
+                        <th lay-data="{type:'checkbox'}"></th>
+                        <th lay-data="{field:'id', sort:true, align:'center'}">学号</th>
+                        <th lay-data="{field:'name', align:'center'}">姓名</th>
+                        <th lay-data="{field:'sex', align:'center'}">性别</th>
+                        <th lay-data="{field:'class', sort:true, align:'center'}">班级</th>
+                        <th lay-data="{field:'phone', align:'center'}">电话</th>
+                        <th lay-data="{field:'birth', align:'center'}">生日</th>
+                        <th lay-data="{field:'note', align:'center'}">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student, iter: ${oldStudentList}" th:id="'No.' + ${iter.index}">
+                        <td></td>
+                        <td><label th:text="${student.id}"></label></td>
+                        <td th:text="${student.name}"></td>
+                        <td th:text="${student.sex}"></td>
+                        <td th:text="${student.course}"></td>
+                        <td th:text="${student.phone_number}"></td>
+                        <td th:text="${student.birth}"></td>
+                        <td th:text="${student.note}"></td>
+                    </tr>
+                </tbody>
             </table>
-            <button type="submit" name="button" value="Modify" class="saveButton">保存</button>
-            <button type="button" onclick="window.close()" class="cancelButton">取消</button>
+            <button type="submit" id="deletePosition" class="mybutton" style="display: none">删除</button>
         </form>
-    </div>
-    <div class="modify-popup" id="emptyCheckboxNotice">
-        <h1 style="color: red">未选择学生数据，请先选择记录！</h1>
-        <button type="button" onclick="window.close()" class="cancelButton">关闭</button>
-    </div>
+        <button type="button" id="deleteNoticePosition" class="mybutton" onclick="openNotice()">删除</button>
+    
+        <!--------------------------------------------Page Search Model------------------------------------------------>
+    
+        <br>
+        <form action="#" th:action="@{/home}" method="post" style="display: none">
+            <label for="page">页码:</label>
+            <input type="text" id="page" name="page" />
+            <button type="submit" name="button" value="page_search">跳转</button>
+        </form>
+        
+        <!----------------------------------------------Create Popup Model---------------------------------------------->
+    
+        <div id="createPosition">
+            <button type="button" class="mybutton" onclick="openCreate()" style="display: none">新增</button>
+        </div>
+        <div class="create-popup" id="createForm">
+            <blockquote class="layui-elem-quote">新建学生档案</blockquote>
+            <form class="layui-form" style="width: 90%" action="#" th:action="@{/home}" th:object="${newStudent}" method="post">
 
-    <!-------------------------------create & modify popup form submit trigger----------------------------------->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{name}" class="layui-input" placeholder="请输入姓名" />
+                    </div>
+                </div>
 
-    <div th:if="${modifySubmitted == true}">
-        <img src onerror="closeAndReload_M()" style="display: none" />
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{sex}" class="layui-input" placeholder="请输入性别" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{course}" class="layui-input" placeholder="请输入班号" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{phone_number}" class="layui-input" placeholder="请输入电话号码" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">生日</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{birth}" class="layui-input" placeholder="请选择出生日期"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" th:field="*{note}" class="layui-input" placeholder="学生备注" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" name="button" value="Create" class="layui-btn">创建</button>
+                        <button type="reset" value="Reset" class="layui-btn layui-btn-normal">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+        <!---------------------------------Modify Popup Model (inside child window)-------------------------------------->
+    
+        <div id="modifyPosition">
+            <button type="button" class="mybutton" onclick="openModify()">更改</button>
+        </div>
+        <div class="modify-popup" id="modifyForm">
+            <h1>在下表更改学生信息:</h1>
+            <form action="#" th:action="@{/home}" method="post">
+                <table id="alternatecolor">
+                    <tr>
+                        <th>学号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>班级</th>
+                        <th>电话</th>
+                        <th>生日</th>
+                        <th>备注</th>
+                    </tr>
+                    <tr th:each="student: ${oldStudentList}" th:id="${student.id}" style="display: none">
+                        <td th:text="${student.id}"></td>
+                        <td><input type="text" name="name" th:value="${student.name}" size="10" /></td>
+                        <td><input type="text" name="sex" th:value="${student.sex}" size="2" /></td>
+                        <td><input type="text" name="course" th:value="${student.course}" size="5" /></td>
+                        <td><input type="text" name="phone_number" th:value="${student.phone_number}" size="20" /></td>
+                        <td><input type="text" name="birth" th:value="${student.birth}" size="10" /></td>
+                        <td><input type="text" name="note" th:value="${student.note}" size="10" /></td>
+                        <input type="hidden" name="id" th:value="${student.id}"/>
+                    </tr>
+                </table>
+                <button type="submit" name="button" value="Modify" class="saveButton">保存</button>
+                <button type="button" onclick="window.close()" class="cancelButton">取消</button>
+            </form>
+        </div>
+    
+        <!-------------------------------create & modify popup form submit trigger----------------------------------->
+    
+        <div th:if="${modifySubmitted == true}">
+            <img src onerror="closeAndReload_M()" style="display: none" />
+            <script>
+                function closeAndReload_M() {
+                    window.close();
+                    window.opener.location.reload();
+                }
+            </script>
+        </div>
+    
+        <div th:if="${createSubmitted == true}">
+            <img src onerror="closeAndReload_C()" style="display: none" />
+            <script>
+                function closeAndReload_C() {
+                    window.close();
+                    window.opener.location.reload();
+                }
+            </script>
+        </div>
+    
+        <!-----------------------------------------script loading area---------------------------------------------->
+    
         <script>
-            function closeAndReload_M() {
-                window.close();
-                window.opener.location.reload();
-            }
-        </script>
-    </div>
+            layui.use(['form', 'laydate', 'table', 'layer'], function() {
+                var form = layui.form,
+                laydate = layui.laydate,
+                table = layui.table,
+                layer = layui.layer;
 
-    <div th:if="${createSubmitted == true}">
-        <img src onerror="closeAndReload_C()" style="display: none" />
-        <script>
-            function closeAndReload_C() {
-                window.close();
-                window.opener.location.reload();
-            }
-        </script>
-    </div>
+                //use laydate inside search_form
+                laydate.render({
+                    elem: '#birth'
+                });
 
-    <!---------------------------------------------------------------------------------------------------------->
+                //transform static table
+                table.init('home_table', {
+                    id: 'home_table_id',
+                    height: 460,
+                    width: 1500,
+                    page: true
+                });
+
+                //listen table checkbox
+                table.on('checkbox(home_table)', function(obj) {
+                    console.log(obj);
+                });
+
+                //testing
+                document.getElementById("test_button").addEventListener('click', function() {
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim',
+                        area: ['600px', '500px'],
+                        content: document.getElementById("createForm").innerHTML
+                    });
+                });
+
+            });
+
+        </script>
+
+        <button class="layui-btn" id="test_button" type="button">新增</button>
+
+    </div>
 
 </body>
 </html>

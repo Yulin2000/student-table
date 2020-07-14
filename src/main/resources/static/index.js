@@ -3,27 +3,27 @@
 //pop up create form
 function openCreate() {
     var popup = window.open("","name", "width=600,height=400,top=200,left=400");
-    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
+    popup.document.write("<link rel='stylesheet' type='text/css' href='/layui/css/layui.css'>");
+    popup.document.write("<script src='/layui/layui.js'></script>");
     popup.document.write(document.getElementById("createForm").innerHTML);
 }
 
+
 //pop up modify form
 function openModify() {
-    var popup = window.open("","name", "width=800,height=400,top=300,left=300");
-    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
     if(HAVE_CHECKED === 0) {
-        popup.document.write(document.getElementById("emptyCheckboxNotice").innerHTML);
+        openNotice();
     }
     else {
+        var popup = window.open("","name", "width=800,height=400,top=300,left=300");
+        popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
         popup.document.write(document.getElementById("modifyForm").innerHTML);
     }
 }
 
 //pop up delete/modify notice page (warning: no checked data)
 function openNotice() {
-    var popup = window.open("","name", "width=600,height=400,top=200,left=400");
-    popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
-    popup.document.write(document.getElementById("emptyCheckboxNotice").innerHTML);
+    alert("未选择数据！");
 }
 
 

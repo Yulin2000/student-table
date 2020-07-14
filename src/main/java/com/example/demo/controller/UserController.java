@@ -163,42 +163,5 @@ public class UserController {
         return "delete";
     }
 
-    //display the select result
-    @PostMapping("/select/result")
-    public String selectPost(@RequestParam(value = "sex", required = false) String sex,
-                             @RequestParam(value = "name", required = false) String name,
-                             @RequestParam(value = "phone", required = false) String phone,
-                             @RequestParam(value = "birth", required = false) String birth,
-                             Model model) {
-    String sql = "select * from students where ";
-
-    //check sex
-    if(sex.equals("male")) {
-        sql = sql + "sex = 'm'";
-    }
-    else {
-        sql = sql + "sex = 'f'";
-    }
-    
-    //check name
-    if(!name.isEmpty()) {
-        sql = sql + " and SOUNDEX(name) = SOUNDEX('" + name + "')";
-    }
-
-    //check phone number
-    if(!phone.isEmpty()) {
-        sql = sql + " and phone_number = '" + phone + "'";
-    }
-
-    //check birthday
-    if(!birth.isEmpty()) {
-        sql = sql + " and birth = '" + birth + "'";
-    }
-
-    sql = sql + ";";
-    List<Student> newStudentList = userRepository.select(sql);
-    model.addAttribute("newStudentList", newStudentList);
-    return "result";
-    }
 
 }
