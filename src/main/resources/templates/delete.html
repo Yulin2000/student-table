@@ -3,35 +3,65 @@
 <head>
     <title>MySQL Database</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="mystyle.css">
-    <script th:inline="javascript" src="index.js"></script>
+    
+    <!--layui import-->
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
 </head>
-<body>
-    <h1>要删除的学生信息:</h1>
-    <table style="width: 100%" id="alternatecolor">
-        <tr>
-            <th>学号</th>
-            <th>姓名</th>
-            <th>性别</th>
-            <th>班级</th>
-            <th>电话</th>
-            <th>生日</th>
-            <th>备注</th>
-        </tr>
-        <tr th:each="student: ${delete_ones}">
-            <td th:text="${student.id}"></td>
-            <td th:text="${student.name}"></td>
-            <td th:text="${student.sex}"></td>
-            <td th:text="${student.course}"></td>
-            <td th:text="${student.phone_number}"></td>
-            <td th:text="${student.birth}"></td>
-            <td th:text="${student.note}"></td>
-        </tr>
-    </table>
-    <form action="#" th:action="@{/home}" method="post">
-        <input type="hidden" name="sql" th:value="${delete_sql}" />
-        <button type="submit" name="button" value="Delete" class="mybutton">确认删除</button>
-    </form>
-    <a href="/home"><button type="button" class="mybutton">取消</button></a>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        
+        <div class="layui-header layui-bg-black">
+            <div class="layui-logo">要删除的学生信息</div>
+        </div>
+
+        <table lay-filter="delete_table">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'id', sort:true, align:'center'}">学号</th>
+                    <th lay-data="{field:'name', align:'center'}">姓名</th>
+                    <th lay-data="{field:'sex', align:'center'}">性别</th>
+                    <th lay-data="{field:'class', sort:true, align:'center'}">班级</th>
+                    <th lay-data="{field:'phone', align:'center'}">电话</th>
+                    <th lay-data="{field:'birth', align:'center'}">生日</th>
+                    <th lay-data="{field:'note', align:'center'}">备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student: ${delete_ones}">
+                    <td th:text="${student.id}"></td>
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.sex}"></td>
+                    <td th:text="${student.course}"></td>
+                    <td th:text="${student.phone_number}"></td>
+                    <td th:text="${student.birth}"></td>
+                    <td th:text="${student.note}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <form class="layui-form" action="#" th:action="@{/home}" method="post">
+            <input type="hidden" name="sql" th:value="${delete_sql}" />
+            <button type="submit" name="button" value="Delete" class="layui-btn">确认删除</button>
+        </form>
+        <a href="/home"><button type="button" class="layui-btn layui-btn-danger">取消</button></a>
+
+        <script>
+            layui.use(['form', 'table'], function() {
+                var form = layui.form,
+                table = layui.table;
+
+                //transform static table
+                table.init('delete_table', {
+                    id: 'delete_table_id',
+                    height: 460,
+                    width: 1500,
+                    page: true
+                });
+
+            });
+
+        </script>
+
+    </div>
 </body>
 </html>

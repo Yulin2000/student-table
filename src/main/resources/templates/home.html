@@ -8,8 +8,15 @@
     <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
     <script src="/layui/layui.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="mystyle.css">
-    <script th:inline="javascript" src="index.js"></script>
+    <!--jQuery import-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        /*remove arrows inside table units*/
+        .layui-table-grid-down {
+            display: none;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
 
@@ -76,52 +83,47 @@
     
         <!-------------------------------------------Display & Delete Model------------------------------------------------>
     
-        <form class="layui-form" action="#" th:action="@{/delete}" method="post">
+        <form id="delete_form" class="layui-form" action="#" th:action="@{/delete}" method="post">
             <table lay-filter="home_table">
                 <thead>
                     <tr>
                         <th lay-data="{type:'checkbox'}"></th>
-                        <th lay-data="{field:'id', sort:true, align:'center'}">学号</th>
-                        <th lay-data="{field:'name', align:'center'}">姓名</th>
-                        <th lay-data="{field:'sex', align:'center'}">性别</th>
-                        <th lay-data="{field:'class', sort:true, align:'center'}">班级</th>
+                        <th lay-data="{field:'id', width:100, sort:true, align:'center'}">学号</th>
+                        <th lay-data="{field:'name', width:150, align:'center'}">姓名</th>
+                        <th lay-data="{field:'sex', width:100, align:'center'}">性别</th>
+                        <th lay-data="{field:'class', width:100, sort:true, align:'center'}">班级</th>
                         <th lay-data="{field:'phone', align:'center'}">电话</th>
                         <th lay-data="{field:'birth', align:'center'}">生日</th>
                         <th lay-data="{field:'note', align:'center'}">备注</th>
+                        <th lay-data="{width: 100, align:'center', toolbar:'#barEdit'}"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="student, iter: ${oldStudentList}" th:id="'No.' + ${iter.index}">
                         <td></td>
-                        <td><label th:text="${student.id}"></label></td>
+                        <td th:text="${student.id}"></td>
                         <td th:text="${student.name}"></td>
                         <td th:text="${student.sex}"></td>
                         <td th:text="${student.course}"></td>
                         <td th:text="${student.phone_number}"></td>
                         <td th:text="${student.birth}"></td>
                         <td th:text="${student.note}"></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" id="deletePosition" class="mybutton" style="display: none">删除</button>
+
+            <script type="text/html" id="barEdit">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            </script>
+
+            <!--get checked_ones from layui function-->
+            <div id="input_group"></div>
         </form>
-        <button type="button" id="deleteNoticePosition" class="mybutton" onclick="openNotice()">删除</button>
     
-        <!--------------------------------------------Page Search Model------------------------------------------------>
-    
-        <br>
-        <form action="#" th:action="@{/home}" method="post" style="display: none">
-            <label for="page">页码:</label>
-            <input type="text" id="page" name="page" />
-            <button type="submit" name="button" value="page_search">跳转</button>
-        </form>
-        
         <!----------------------------------------------Create Popup Model---------------------------------------------->
     
-        <div id="createPosition">
-            <button type="button" class="mybutton" onclick="openCreate()" style="display: none">新增</button>
-        </div>
-        <div class="create-popup" id="createForm">
+        <div style="display: none" id="createForm">
             <blockquote class="layui-elem-quote">新建学生档案</blockquote>
             <form class="layui-form" style="width: 90%" action="#" th:action="@{/home}" th:object="${newStudent}" method="post">
 
@@ -156,7 +158,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">生日</label>
                     <div class="layui-input-block">
-                        <input type="text" th:field="*{birth}" class="layui-input" placeholder="请选择出生日期"/>
+                        <input type="text" th:field="*{birth}" class="layui-input" placeholder="请输入出生日期"/>
                     </div>
                 </div>
 
@@ -176,65 +178,70 @@
             </form>
         </div>
     
-        <!---------------------------------Modify Popup Model (inside child window)-------------------------------------->
+        <!-----------------------------------------Modify Popup Model---------------------------------------------->
     
-        <div id="modifyPosition">
-            <button type="button" class="mybutton" onclick="openModify()">更改</button>
-        </div>
-        <div class="modify-popup" id="modifyForm">
-            <h1>在下表更改学生信息:</h1>
-            <form action="#" th:action="@{/home}" method="post">
-                <table id="alternatecolor">
-                    <tr>
-                        <th>学号</th>
-                        <th>姓名</th>
-                        <th>性别</th>
-                        <th>班级</th>
-                        <th>电话</th>
-                        <th>生日</th>
-                        <th>备注</th>
-                    </tr>
-                    <tr th:each="student: ${oldStudentList}" th:id="${student.id}" style="display: none">
-                        <td th:text="${student.id}"></td>
-                        <td><input type="text" name="name" th:value="${student.name}" size="10" /></td>
-                        <td><input type="text" name="sex" th:value="${student.sex}" size="2" /></td>
-                        <td><input type="text" name="course" th:value="${student.course}" size="5" /></td>
-                        <td><input type="text" name="phone_number" th:value="${student.phone_number}" size="20" /></td>
-                        <td><input type="text" name="birth" th:value="${student.birth}" size="10" /></td>
-                        <td><input type="text" name="note" th:value="${student.note}" size="10" /></td>
-                        <input type="hidden" name="id" th:value="${student.id}"/>
-                    </tr>
-                </table>
-                <button type="submit" name="button" value="Modify" class="saveButton">保存</button>
-                <button type="button" onclick="window.close()" class="cancelButton">取消</button>
+        <div style="display: none" id="modifyForm">
+            <blockquote class="layui-elem-quote">在下表更改学生信息</blockquote>
+            <form class="layui-form" style="width: 90%" action="#" th:action="@{/home}" method="post">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input id="name_modify" type="text" name="name" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input id="sex_modify" type="text" name="sex" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-input-block">
+                        <input id="course_modify" type="text" name="course" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input id="phone_number_modify" type="text" name="phone_number" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">生日</label>
+                    <div class="layui-input-block">
+                        <input id="birth_modify" type="text" name="birth" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <input id="note_modify" type="text" name="note" class="layui-input" />
+                    </div>
+                </div>
+
+                <input type="hidden" id="id_modify" name="id" />
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" name="button" value="Modify" class="layui-btn">保存</button>
+                    </div>
+                </div>
             </form>
-        </div>
-    
-        <!-------------------------------create & modify popup form submit trigger----------------------------------->
-    
-        <div th:if="${modifySubmitted == true}">
-            <img src onerror="closeAndReload_M()" style="display: none" />
-            <script>
-                function closeAndReload_M() {
-                    window.close();
-                    window.opener.location.reload();
-                }
-            </script>
-        </div>
-    
-        <div th:if="${createSubmitted == true}">
-            <img src onerror="closeAndReload_C()" style="display: none" />
-            <script>
-                function closeAndReload_C() {
-                    window.close();
-                    window.opener.location.reload();
-                }
-            </script>
         </div>
     
         <!-----------------------------------------script loading area---------------------------------------------->
     
         <script>
+            //global variables for checkbox, using for marking deleted students data
+            var checked_students = [];
+
             layui.use(['form', 'laydate', 'table', 'layer'], function() {
                 var form = layui.form,
                 laydate = layui.laydate,
@@ -246,34 +253,78 @@
                     elem: '#birth'
                 });
 
-                //transform static table
+                //transform static home_table to layui
                 table.init('home_table', {
                     id: 'home_table_id',
                     height: 460,
-                    width: 1500,
+                    width: 1200,
                     page: true
                 });
 
-                //listen table checkbox
+                //monitor table checkbox
                 table.on('checkbox(home_table)', function(obj) {
                     console.log(obj);
+                    var checkStatus = table.checkStatus('home_table_id');
+                    checked_students = checkStatus.data;  //array of the checked student objects
                 });
 
-                //testing
-                document.getElementById("test_button").addEventListener('click', function() {
+                //popup create form
+                document.getElementById("create_button").addEventListener('click', function() {
                     layer.open({
                         type: 1,
+                        title: "新增学生",
                         skin: 'layui-layer-rim',
                         area: ['600px', '500px'],
-                        content: document.getElementById("createForm").innerHTML
+                        content: $('#createForm')
                     });
+                });
+
+                //jump to delete confirm page
+                document.getElementById("delete_button").addEventListener('click', function() {
+                    if(checked_students.length === 0) {
+                        layer.msg('未选择删除数据');
+                    }
+                    else {
+                        //sending checked ids to server by automatic generating input tags
+                        for(var i = 0; i < checked_students.length; ++i) {
+                            var input = document.createElement("input");
+                            input.type = "number";
+                            input.name = "checked_ones";
+                            input.value = checked_students[i].id;
+                            input.style.display = "none";
+                            document.getElementById("input_group").appendChild(input);
+                        }
+                        document.getElementById("delete_form").submit();
+                    }
+                });
+
+                //monitor toolbar (edit)
+                table.on('tool(home_table)', function(obj) {
+                    var data = obj.data;
+                    if(obj.event === 'edit') {
+                        document.getElementById("id_modify").value = data.id;
+                        document.getElementById("name_modify").value = data.name;
+                        document.getElementById("sex_modify").value = data.sex;
+                        document.getElementById("course_modify").value = data.class;
+                        document.getElementById("phone_number_modify").value = data.phone;
+                        document.getElementById("birth_modify").value = data.birth;
+                        document.getElementById("note_modify").value = data.note;
+                        layer.open({
+                        type: 1,
+                        title: "修改学生信息",
+                        skin: 'layui-layer-rim',
+                        area: ['600px', '500px'],
+                        content: $('#modifyForm')
+                    });
+                    }
                 });
 
             });
 
         </script>
 
-        <button class="layui-btn" id="test_button" type="button">新增</button>
+        <button class="layui-btn" id="create_button" type="button">新增</button>
+        <button class="layui-btn" id="delete_button" type="button">删除</button>
 
     </div>
 

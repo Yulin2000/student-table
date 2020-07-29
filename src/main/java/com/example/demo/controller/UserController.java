@@ -39,17 +39,15 @@ public class UserController {
                               //create model
                               @ModelAttribute("newStudent") Student newOne,
                               //modify model
-                              @RequestParam(value = "id", required = false) int[] id,
-                              @RequestParam(value = "name", required = false) String[] name,
-                              @RequestParam(value = "sex", required = false) String[] sex,
-                              @RequestParam(value = "course", required = false) int[] course,
-                              @RequestParam(value = "phone_number", required = false) String[] phone_number,
-                              @RequestParam(value = "birth", required = false) String[] birth,
-                              @RequestParam(value = "note", required = false) String[] note,
+                              @RequestParam(value = "id", required = false) Integer id,
+                              @RequestParam(value = "name", required = false) String name,
+                              @RequestParam(value = "sex", required = false) String sex,
+                              @RequestParam(value = "course", required = false) Integer course,
+                              @RequestParam(value = "phone_number", required = false) String phone_number,
+                              @RequestParam(value = "birth", required = false) String birth,
+                              @RequestParam(value = "note", required = false) String note,
                               //delete model
                               @RequestParam(value = "sql", required = false) String sql,
-                              //page search model
-                              @RequestParam(value = "page", required = false) Integer page,
                               //search model
                               @RequestParam(value = "sex_search", required = false) String sex_search,
                               @RequestParam(value = "name_search", required = false) String name_search,
@@ -63,24 +61,20 @@ public class UserController {
             String insert_sql = "insert into students(name,sex,class,phone_number,birth,note) values(";
             insert_sql = insert_sql + newOne.getAll() + ");";
             userRepository.update(insert_sql);
-            model.addAttribute("createSubmitted", true); //tell home this is child page
         }
 
         //case2: submit modify form
         else if(button.equals("Modify")) {
             String update_sql = "Unchanged";
-            for(int i = 0; i < id.length; ++i) {
-                update_sql = "update students set";
-                update_sql = update_sql + " name = '" + name[i] + "',";
-                update_sql = update_sql + " sex = '" + sex[i] + "',";
-                update_sql = update_sql + " class = " + Integer.toString(course[i]) + ",";
-                update_sql = update_sql + " phone_number = '" + phone_number[i] + "',";
-                update_sql = update_sql + " birth = '" + birth[i] + "',";
-                update_sql = update_sql + " note = '" + note[i] + "'";
-                update_sql = update_sql + " where id = " + Integer.toString(id[i]) + ";";
-                userRepository.update(update_sql);
-            }
-            model.addAttribute("modifySubmitted", true); //tell home this is child page
+            update_sql = "update students set";
+            update_sql = update_sql + " name = '" + name + "',";
+            update_sql = update_sql + " sex = '" + sex + "',";
+            update_sql = update_sql + " class = " + course.toString() + ",";
+            update_sql = update_sql + " phone_number = '" + phone_number + "',";
+            update_sql = update_sql + " birth = '" + birth + "',";
+            update_sql = update_sql + " note = '" + note + "'";
+            update_sql = update_sql + " where id = " + id.toString() + ";";
+            userRepository.update(update_sql);
         }
 
         //case3: submit delete form
@@ -88,18 +82,7 @@ public class UserController {
             userRepository.update(sql);
         }
 
-        //case4: get page search form
-        else if(button.equals("page_search")) {
-            int pageValue = page.intValue();
-            int targetPage = (pageValue - 1) * 10;
-            String page_sql = "select * from students limit 10 offset " + Integer.toString(targetPage) + ";";
-            List<Student> oldStudentList = userRepository.select(page_sql);
-            model.addAttribute("oldStudentList", oldStudentList);
-            model.addAttribute("newStudent", new Student());
-            return "home";
-        }
-
-        //case5: submit search form
+        //case4: submit search form
         else if(button.equals("Search")) {
             String search_sql = "select * from students where ";
 

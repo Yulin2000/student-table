@@ -1,203 +1,60 @@
-//----------------------------------popup controller--------------------------------
-
-//pop up create form
-function openCreate() {
-    var popup = window.open("","name", "width=600,height=400,top=200,left=400");
-    popup.document.write("<link rel='stylesheet' type='text/css' href='/layui/css/layui.css'>");
-    popup.document.write("<script src='/layui/layui.js'></script>");
-    popup.document.write(document.getElementById("createForm").innerHTML);
-}
-
-
-//pop up modify form
-function openModify() {
-    if(HAVE_CHECKED === 0) {
-        openNotice();
-    }
-    else {
-        var popup = window.open("","name", "width=800,height=400,top=300,left=300");
-        popup.document.write("<link rel='stylesheet' type='text/css' href='popup.css'>");
-        popup.document.write(document.getElementById("modifyForm").innerHTML);
-    }
-}
-
-//pop up delete/modify notice page (warning: no checked data)
-function openNotice() {
-    alert("未选择数据！");
-}
-
-
-//------------------------------------checkbox and popup--------------------------------------
-
-
-var HAVE_CHECKED = 0;
-
-//check a row of data
-function add(id) {
-    document.getElementById(id).style.display = "";
-    HAVE_CHECKED = HAVE_CHECKED + 1;
-    document.getElementById("deletePosition").style.display = "";
-    document.getElementById("deleteNoticePosition").style.display = "none";
-}
-
-//uncheck a row of data
-function remove(id) {
-    document.getElementById(id).style.display = "none";
-    HAVE_CHECKED = HAVE_CHECKED - 1;
-    if(HAVE_CHECKED === 0) {
-        document.getElementById("deletePosition").style.display = "none";
-        document.getElementById("deleteNoticePosition").style.display = "";
-    }
-}
-
-
-//-------------------------------------Display by page-----------------------------------------
-
-var NUMBER_OF_DATA = 0;
-var CURR = 0;
-
-//accumulate the number of date
-function accumulate() {
-    NUMBER_OF_DATA = NUMBER_OF_DATA + 1;
-}
-
-//display page divider
-function dividePage() {
-    //helper function: jump to a certain page
-    skipPage = function() {
-        var pageNumber = this.innerHTML;
-
-        for(var j = 0; j < NUMBER_OF_DATA; ++j) {
-            document.getElementById(getId(j)).style.display = "none";
-        }
-        CURR = pageNumber * 10 - 20;
-        nextPage();
-    };
-
-    var numberOfPage = Math.ceil(NUMBER_OF_DATA / 10);
-    var parentElement = document.getElementById("page-divider");
-    for(var i = 1; i <= numberOfPage; ++i) {
-        var childElement = document.createElement("button");
-        childElement.type = "button";
-        childElement.innerHTML = i;
-        childElement.id = getPageId(i);
-        childElement.className = "pageButton";
-        childElement.onclick = skipPage;
-        parentElement.appendChild(childElement);
-    }
-}
-
-//indicate current page
-function colorPage() {
-    var numberOfPage = Math.ceil(NUMBER_OF_DATA / 10);
-    for(var i = 1; i <= numberOfPage; ++i) {
-        document.getElementById(getPageId(i)).style = "color = black";
-    }
-    var currPage = CURR / 10 + 1;
-    document.getElementById(getPageId(currPage)).style = "color: red";
-}
-
-//get id
-function getId(id) {
-    return "No." + id.toString();
-}
-
-//get page id
-function getPageId(id) {
-    return "Page" + id.toString();
-}
-
-//button display
-function displayButton() {
-    document.getElementById("prev").style.display = "";
-    document.getElementById("next").style.display = "";
-    if(CURR - 10 < 0) {
-        document.getElementById("prev").style.display = "none";
-    }
-    if(CURR + 10 >= NUMBER_OF_DATA) {
-        document.getElementById("next").style.display = "none";
-    }
-}
-
-//first page and call default functions
-function firstPage() {
-    //show the bottons of the first page
-    displayButton();
-    document.getElementById(getId(CURR)).style.display = "";
-    //show itself and next 9 elements
-    for(var i = 1; i <= 9; ++i) {
-        if(CURR + i < NUMBER_OF_DATA) {
-            document.getElementById(getId(CURR + i)).style.display = "";
-        }
-    }
-
-    //first default function: display NUMBER_OF_DATA
-    document.getElementById("data-number").innerHTML = NUMBER_OF_DATA;
-    //second default function: display divided pages
-    dividePage();
-    colorPage();
-}
-
-//next page
-function nextPage() {
-    //move to the next page and show the buttons of that page
-    CURR = CURR + 10;
-    displayButton();
-    document.getElementById(getId(CURR)).style.display = "";
-    //show itself and next 9 elements, then clean the previous 10 elements
-    for(var i = 1; i <= 10; ++i) {
-        if(CURR - i >= 0) {
-            document.getElementById(getId(CURR - i)).style.display = "none";
-        }
-        if(i < 10 && CURR + i < NUMBER_OF_DATA) {
-            document.getElementById(getId(CURR + i)).style.display = "";
-        }
-    }
-    colorPage();
-}
-
-//previous page
-function prevPage() {
-    document.getElementById(getId(CURR)).style.display = "none";
-    //clean itself and next 9 elements, then show the previous 10 elements
-    for(var i = 1; i <= 10; ++i) {
-        if(i < 10 && CURR + i < NUMBER_OF_DATA) {
-            document.getElementById(getId(CURR + i)).style.display = "none";
-        }
-        if(CURR - i >= 0) {
-            document.getElementById(getId(CURR - i)).style.display = "";
-        }
-    }
-    //move to the previous page and display the buttons of that page
-    CURR = CURR - 10;
-    displayButton();
-    colorPage();
-}
-
-
-//---------------------------------------alternatecolor--------------------------------
-function altRows(id){
-    if(document.getElementsByTagName){ 
-         
-        var table = document.getElementById(id); 
-        var rows = table.getElementsByTagName("tr");
-          
-        for(i = 0; i < rows.length; i++){         
-            if(i % 2 == 0){
-                rows[i].className = "evenrowcolor";
-            }else{
-                rows[i].className = "oddrowcolor";
-            }     
-        }
-    }
-}
-
-window.onload = function() {
-    altRows('alternatecolor');
-}
-
-//----------------------------------------------------------------------------------------
+<tbody>
+<tr th:each="student: ${oldStudentList}" th:id="${student.id}" style="display: none">
+    <td th:text="${student.id}"></td>
+    <td><input type="text" name="name" th:value="${student.name}" size="10" /></td>
+    <td><input type="text" name="sex" th:value="${student.sex}" size="2" /></td>
+    <td><input type="text" name="course" th:value="${student.course}" size="5" /></td>
+    <td><input type="text" name="phone_number" th:value="${student.phone_number}" size="20" /></td>
+    <td><input type="text" name="birth" th:value="${student.birth}" size="10" /></td>
+    <td><input type="text" name="note" th:value="${student.note}" size="10" /></td>
+    <input type="hidden" name="id" th:value="${student.id}"/>
+</tr>
+</tbody>
 
 
 
+<div style="display: none" id="modifyForm">
+<blockquote class="layui-elem-quote">在下表更改学生信息</blockquote>
+<form action="#" th:action="@{/home}" method="post">
+    <table lay-filter="modify_table">
+        <thead>
+            <tr>
+                <th lay-data="{field:'id', sort:true, align:'center'}">学号</th>
+                <th lay-data="{field:'name', align:'center', edit:'text'}">姓名</th>
+                <th lay-data="{field:'sex', align:'center', edit:'text'}">性别</th>
+                <th lay-data="{field:'class', sort:true, align:'center', edit:'text'}">班级</th>
+                <th lay-data="{field:'phone', align:'center', edit:'text'}">电话</th>
+                <th lay-data="{field:'birth', align:'center', edit:'text'}">生日</th>
+                <th lay-data="{field:'note', align:'center', edit:'text'}">备注</th>
+            </tr>
+        </thead>
+    </table>
+    <button type="submit" name="button" value="Modify" class="layui-btn">保存</button>
+</form>
+</div>
 
+
+                            //name input block
+                            var div_item = document.createElement("div");
+                            div_item.className = "layui-form-item";
+                            var label_name = document.createElement("label");
+                            label_name.className = "layui-form-label";
+                            label_name.innerHTML = "姓名";
+                            div_item.appendChild(label_name);                         //append label element
+                            var input_name = document.createElement("input");
+                            input_name.setAttribute("type", "text");
+                            input_name.setAttribute("name", "name");
+                            //input_name.setAttribute("value", checked_students[i].name);
+                            input_name.className = "layui-input-block layui-input";
+                            div_item.appendChild(input_name);                         //append input element
+                            div_main.appendChild(div_item);
+
+
+                            <!-----------------------------------------Modify Popup Model---------------------------------------------->
+    
+                            <div style="display: none" id="modifyForm">
+                                <blockquote class="layui-elem-quote">在下表更改学生信息</blockquote>
+                                <form id="modify_form" style="width: 90%" class="layui-form" action="#" th:action="@{/home}" method="post">
+                                    <button id="modify_confirm" type="submit" name="button" value="Modify" class="layui-btn">保存</button>
+                                </form>
+                            </div>
